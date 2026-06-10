@@ -10,31 +10,43 @@ import { UsersCreateRequest } from '../models/users.model';
 export const UsersService = {
   async create({ username, email, password, fullName }: UsersCreateRequest) {
     const createdUser = await prisma.user.create({
-        data: {
-            username, 
-            email, 
-            password, 
-            fullName
-        }
+      data: {
+        username,
+        email,
+        password,
+        fullName,
+      },
     });
-    
+
     return {
-      email: createdUser?.email, 
-      username: createdUser?.username, 
-      fullName: createdUser?.fullName
-    }
+      email: createdUser?.email,
+      username: createdUser?.username,
+      fullName: createdUser?.fullName,
+    };
   },
 
-  async getAll(page: number, limit: number){
+  async getAll(page: number, limit: number) {
     // page: 01 -> 0 data
     // page: 02 -> 10 data
     // page: 03 -> 20 data
 
-    const offset: number = (page-1) * limit
+    const offset: number = (page - 1) * limit;
 
-    return await prisma.user.findMany({
-      take: limit, 
-      skip: offset
-    })
-  }
+    const usersData = await prisma.user.findMany({
+      take: limit,
+      skip: offset,
+    });
+
+    const totalUsersData = await prisma.user.count();
+
+    return {
+      usersData,
+      meta: {
+        page,
+        limit,
+        totalData: totalUsersData,
+        totalPage: Math.ceil(totalUsersData / limit),
+      },
+    };
+  },
 };

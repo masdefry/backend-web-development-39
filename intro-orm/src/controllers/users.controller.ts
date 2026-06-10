@@ -36,7 +36,7 @@ export const UsersController = {
   async getAll(req: Request, res: Response) {
     const { page = 1, limit = 10 } = req?.query;
 
-    const usersList = await UsersService.getAll(
+    const {usersData, meta} = await UsersService.getAll(
       parseInt(page as string),
       parseInt(limit as string),
     );
@@ -44,7 +44,8 @@ export const UsersController = {
     res.status(StatusCodes.OK).json({
       success: true,
       message: 'User retrieved successfully',
-      data: usersList,
+      data: usersData,
+      meta
     });
   },
   async update() {},
