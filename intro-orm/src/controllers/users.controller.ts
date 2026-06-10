@@ -36,7 +36,7 @@ export const UsersController = {
   async getAll(req: Request, res: Response) {
     const { page = 1, limit = 10 } = req?.query;
 
-    const {usersData, meta} = await UsersService.getAll(
+    const { usersData, meta } = await UsersService.getAll(
       parseInt(page as string),
       parseInt(limit as string),
     );
@@ -45,9 +45,36 @@ export const UsersController = {
       success: true,
       message: 'User retrieved successfully',
       data: usersData,
-      meta
+      meta,
     });
   },
-  async update() {},
-  async delete() {},
+  async update(req: Request, res: Response) {
+    const { username, email, password, fullName } = req.body;
+    const { id } = req?.params;
+
+    const updatedUser = await UsersService.update({
+      username,
+      email,
+      password,
+      fullName,
+      id: id as string,
+    });
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: `User with id=${id} updated successfully`,
+      data: updatedUser,
+    });
+  },
+  async delete(req: Request, res: Response) {
+    const { id } = req?.params;
+
+    await UsersService.delete(id as string);
+
+    res.status(StatusCodes.OK).json({
+      success: true, 
+      message: `User with id=${id} deleted successfully`, 
+      data: null
+    })
+  },
 };

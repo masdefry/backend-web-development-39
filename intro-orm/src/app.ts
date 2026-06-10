@@ -1,5 +1,6 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { UsersRouter } from './routers/users.router';
+import { StatusCodes } from 'http-status-codes';
 
 const PORT: number = 8000;
 
@@ -14,6 +15,15 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/users', UsersRouter);
+
+// Centralized Error Handlers
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+    success: false,
+    message: err?.message,
+    data: null,
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`[⚡APP] Application is running on port: ${PORT}`);
