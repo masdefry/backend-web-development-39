@@ -24,4 +24,17 @@ export const UsersService = {
       fullName: createdUser?.fullName
     }
   },
+
+  async getAll(page: number, limit: number){
+    // page: 01 -> 0 data
+    // page: 02 -> 10 data
+    // page: 03 -> 20 data
+
+    const offset: number = (page-1) * limit
+
+    return await prisma.user.findMany({
+      take: limit, 
+      skip: offset
+    })
+  }
 };

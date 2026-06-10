@@ -27,13 +27,26 @@ export const UsersController = {
       });
     } catch (error: any) {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        success: false, 
-        message: error?.message, 
-        data: null
-      })
+        success: false,
+        message: error?.message,
+        data: null,
+      });
     }
   },
-  async getAll() {},
+  async getAll(req: Request, res: Response) {
+    const { page = 1, limit = 10 } = req?.query;
+
+    const usersList = await UsersService.getAll(
+      parseInt(page as string),
+      parseInt(limit as string),
+    );
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: 'User retrieved successfully',
+      data: usersList,
+    });
+  },
   async update() {},
   async delete() {},
 };
