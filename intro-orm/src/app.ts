@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { UsersRouter } from './routers/users.router';
 import { StatusCodes } from 'http-status-codes';
+import { TodosRouter } from './routers/todos.router';
 
 const PORT: number = 8000;
 
@@ -15,6 +16,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/users', UsersRouter);
+app.use('/todos', TodosRouter);
 
 // Centralized Error Handlers
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
