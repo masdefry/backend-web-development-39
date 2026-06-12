@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id      String        @id @default(uuid())
+  email   String        @unique @db.VarChar(150)
+  username  String      @unique @db.VarChar(25)
+  password  String      
+  fullName  String      @db.VarChar(50)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  deletedAt DateTime?
+
+  articles  Article[]
+  // users_has_articles    UserArticle[]
+
+
+  @@map("users")
+}
+
+// model UserArticle{
+//   id          String     @id @default(cuid())
+//   userId      String    
+//   articleId   String 
+//   createdAt DateTime    @default(now())
+//   updatedAt DateTime    @updatedAt
+//   deletedAt DateTime?
+
+//   users       User      @relation(fields: [userId], references: [id])
+//   articles    Article   @relation(fields: [articleId], references: [id])
+
+//   @@map("users_has_articles")
+// }
+
+model Article {
+  id        String      @id @default(cuid())
+  title     String      @db.VarChar(150)
+  content   String      @db.Text
+  category  Category
+  exerpt    String      @db.Text
+  imageUrl  String 
+  userId    String 
+  users     User        @relation(fields: [userId], references: [id])
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  deletedAt DateTime?
+
+  // users_has_articles    UserArticle[]
+
+  @@map("articles")
+}
+
+enum Category {
+  LIFESTYLE
+  POLITIC 
+  SPORT 
+  FASHION 
+  RELIGIOUS
+}
