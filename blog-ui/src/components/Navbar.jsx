@@ -2,8 +2,11 @@ import { HiOutlinePencilSquare } from 'react-icons/hi2';
 import { RiQuillPenLine } from 'react-icons/ri';
 import { MdOutlineLogout } from 'react-icons/md';
 import { HiOutlineHome } from 'react-icons/hi2';
+import useAuthStore from '../stores/useAuthStore';
 
 export default function Navbar() {
+  const {users} = useAuthStore();
+
   return (
     <div className='navbar bg-base-100 border-b border-base-200 px-4 lg:px-8 sticky top-0 z-50'>
       <div className='navbar-start'>
@@ -16,6 +19,9 @@ export default function Navbar() {
       <div className='navbar-end gap-2'>
         <button className='btn btn-ghost btn-sm gap-2 hidden sm:flex'>
           Home
+        </button>
+        <button className='btn btn-ghost btn-sm gap-2 hidden sm:flex'>
+          {users?.email}
         </button>
         <div className='dropdown dropdown-end'>
           <div

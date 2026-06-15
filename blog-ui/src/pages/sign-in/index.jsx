@@ -5,8 +5,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { loginValidationSchema } from '../../features/sign-in/schemas/login-validation-schema';
 import { axiosInstance } from '../../utils/axios-instance';
 import toast from 'react-hot-toast';
+import useAuthStore from '../../stores/useAuthStore';
 
 export default function LoginPage() {
+  const { setAuth } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -21,7 +23,7 @@ export default function LoginPage() {
         usernameOrEmail: emailOrUsername,
         password,
       });
-
+      setAuth(res?.data?.data);
       toast.success(res?.data?.message);
     } catch (error) {
       toast.error(error?.response?.data?.message);
