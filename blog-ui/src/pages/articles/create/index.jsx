@@ -4,21 +4,35 @@ import {
   HiOutlineTag,
 } from 'react-icons/hi2';
 import Navbar from '../../../components/Navbar';
+import { useForm } from 'react-hook-form';
+import { axiosInstance } from '../../../utils/axios-instance';
+import useAuthStore from '../../../stores/useAuthStore';
 
-const CATEGORIES = [
-  'React',
-  'Vue',
-  'Angular',
-  'Backend',
-  'Database',
-  'DevOps',
-  'Mobile',
-  'UI/UX',
-  'Tutorial',
-  'Tips & Tricks',
-];
+const CATEGORIES = ['LIFESTYLE', 'POLITIC', 'SPORT', 'FASHION', 'RELIGIOUS'];
 
 export default function CreatePostPage() {
+  const {users} = useAuthStore()
+  const { register, handleSubmit } = useForm();
+
+  const onHandlePublishArticle = async ({
+    title,
+    exerpt,
+    imageUrl,
+    content,
+    category,
+  }) => {
+    try {
+      console.log({ title, exerpt, imageUrl, content, category });
+      await axiosInstance.post('/articles', {title, exerpt, imageUrl, content, category}, {
+        headers: {
+          Authorization: users?.id
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className='min-h-screen bg-base-200'>
       <div className='max-w-3xl mx-auto px-4 lg:px-8 py-8'>
@@ -38,7 +52,10 @@ export default function CreatePostPage() {
         </div>
 
         {/* Form Card */}
-        <div className='card bg-base-100 border border-base-200 shadow-sm'>
+        <form
+          onSubmit={handleSubmit(onHandlePublishArticle)}
+          className='card bg-base-100 border border-base-200 shadow-sm'
+        >
           <div className='card-body gap-5'>
             {/* Title */}
             <label className='form-control w-full'>
@@ -52,6 +69,7 @@ export default function CreatePostPage() {
               </div>
               <input
                 type='text'
+                {...register('title')}
                 className='input input-bordered w-full'
                 placeholder='Panduan Lengkap React Hooks untuk Pemula'
                 maxLength={120}
@@ -65,7 +83,10 @@ export default function CreatePostPage() {
                   Category
                 </span>
               </div>
-              <select className='select select-bordered w-full'>
+              <select
+                {...register('category')}
+                className='select select-bordered w-full'
+              >
                 {CATEGORIES.map((c) => (
                   <option key={c}>{c}</option>
                 ))}
@@ -81,6 +102,7 @@ export default function CreatePostPage() {
               </div>
               <input
                 type='text'
+                {...register('imageUrl')}
                 className='input input-bordered w-full'
                 placeholder='https://blog-space.com/your-image-url'
                 maxLength={120}
@@ -98,6 +120,7 @@ export default function CreatePostPage() {
                 </span>
               </div>
               <textarea
+                {...register('exerpt')}
                 className='textarea textarea-bordered w-full h-24 leading-relaxed'
                 placeholder='Write short description of your article...'
                 maxLength={300}
@@ -115,6 +138,7 @@ export default function CreatePostPage() {
                 </span>
               </div>
               <textarea
+                {...register('content')}
                 className='textarea textarea-bordered w-full h-52 leading-relaxed'
                 placeholder='Write article content of your article...'
                 maxLength={5000}
@@ -126,13 +150,13 @@ export default function CreatePostPage() {
             {/* Actions */}
             <div className='flex justify-end gap-3'>
               <button className='btn btn-ghost btn-sm'>Cancel</button>
-              <button className='btn btn-primary btn-sm gap-2'>
+              <button type='submit' className='btn btn-primary btn-sm gap-2'>
                 <HiOutlinePaperAirplane className='text-base' />
                 Publish
               </button>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );

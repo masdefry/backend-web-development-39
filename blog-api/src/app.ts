@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import 'dotenv/config';
 import AuthRouter from './routers/auth.router';
 import cors, { CorsOptions } from 'cors';
+import ArticlesRouter from './routers/articles.router';
 
 const PORT: number = parseInt(process.env.PORT!) || 8001;
 const API_PREFIX = '/api/v1';
@@ -25,6 +26,7 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(`${API_PREFIX}/auth`, AuthRouter);
+app.use(`${API_PREFIX}/articles`, ArticlesRouter);
 
 app.use((err: any, _: Request, res: Response, __: NextFunction) => {
   res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
