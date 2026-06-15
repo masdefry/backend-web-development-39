@@ -10,7 +10,7 @@ export const AuthService = {
       },
     });
 
-    if (!findUser) throw new Error('Email or username already registered');
+    if (findUser) throw new Error('Email or username already registered');
 
     const createdUser = await prisma.user.create({
       data: {
