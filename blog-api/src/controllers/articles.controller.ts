@@ -15,7 +15,18 @@ export const ArticlesController = {
             data: createdArticle
         })
     },
-    getList(req: Request, res: Response){},
+    async getList(req: Request, res: Response){
+        const {page = 1, limit = 10} = req?.query; 
+
+        const {articlesData, meta} = await ArticlesService.getList(parseInt(page as string), parseInt(limit as string))
+    
+        res.status(StatusCodes.OK).json({
+            success: true, 
+            message: 'Articles retrieved successfully', 
+            data: articlesData, 
+            meta
+        })
+    },
     updateById(req: Request, res: Response){},
     deleteById(req: Request, res: Response){}
 }

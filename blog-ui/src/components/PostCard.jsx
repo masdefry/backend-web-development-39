@@ -5,8 +5,9 @@ import {
   HiOutlineTrash,
 } from 'react-icons/hi2';
 import { BsThreeDots } from 'react-icons/bs';
+import { formatInTimeZone } from 'date-fns-tz';
 
-export default function PostCard({ post, navigate, isOwner = false }) {
+export default function PostCard({ post, isOwner = false }) {
   return (
     <div className='card bg-base-100 border border-base-200 hover:shadow-md transition-shadow duration-200'>
       <div className='card-body gap-3'>
@@ -24,20 +25,8 @@ export default function PostCard({ post, navigate, isOwner = false }) {
 
         {/* Excerpt */}
         <p className='text-sm text-base-content/60 leading-relaxed line-clamp-2'>
-          {post.excerpt}
+          {post?.exerpt}
         </p>
-
-        {/* Tags */}
-        <div className='flex flex-wrap gap-1'>
-          {post.tags.map((tag) => (
-            <span
-              key={tag}
-              className='bg-gray-100 p-1 rounded-xs text-xs font-semibold'
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
 
         <div className='divider my-0'></div>
 
@@ -46,11 +35,15 @@ export default function PostCard({ post, navigate, isOwner = false }) {
           <div className='flex items-center gap-3 text-xs text-base-content/50'>
             <span className='flex items-center gap-1'>
               <HiOutlineUser className='text-sm' />
-              {post.author}
+              {post?.users?.fullName}
             </span>
             <span className='flex items-center gap-1'>
               <HiOutlineCalendar className='text-sm' />
-              {post.date}
+              {formatInTimeZone(
+                new Date(post?.createdAt),
+                'Asia/Jakarta',
+                'yyyy MMMM dd HH:mm:ss',
+              )}
             </span>
           </div>
 

@@ -8,7 +8,29 @@ export const ArticlesService = {
 
     return createdArticle;
   },
-  getList() {},
+  async getList(page: number, limit: number) {
+    const offset = (page - 1) * limit;
+
+    const articlesData = await prisma.article.findMany({
+      skip: offset,
+      take: limit,
+      include: {
+        users: true
+      }
+    });
+
+    const totalArticlesData = await prisma.article.count();
+
+    return {
+      articlesData,
+      meta: {
+        page,
+        limit,
+        totalData: totalArticlesData,
+        totalPage: Math.ceil(totalArticlesData / limit),
+      },
+    };
+  },
   updateById() {},
   deleteById() {},
 };
