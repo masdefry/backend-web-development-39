@@ -1,7 +1,33 @@
 import { RiQuillPenLine } from 'react-icons/ri';
 import { HiOutlineEnvelope, HiOutlineLockClosed } from 'react-icons/hi2';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginValidationSchema } from '../../features/sign-in/schemas/login-validation-schema';
+import { axiosInstance } from '../../utils/axios-instance';
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginValidationSchema),
+  });
+
+  const onHandleLogin = async ({ emailOrUsername, password }) => {
+    try {
+      const res = await axiosInstance.post('/auth/login', {
+        usernameOrEmail: emailOrUsername,
+        password,
+      });
+
+      toast.success(res?.data?.message);
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
   return (
     <div className='min-h-screen bg-base-200 flex items-center justify-center px-4'>
       <div className='w-full max-w-md'>
@@ -19,21 +45,29 @@ export default function LoginPage() {
               Sign in into your account
             </p>
           </div>
-          <div className='card-body gap-4'>
-            {/* Email */}
+          <form
+            onSubmit={handleSubmit(onHandleLogin)}
+            className='card-body gap-4'
+          >
+            {/* Email or Username */}
             <label className='form-control w-full'>
               <div className='label pb-1'>
-                <span className='label-text font-semibold text-sm'>Email</span>
+                <span className='label-text font-semibold text-sm'>
+                  User Account
+                </span>
               </div>
               <label className='input input-bordered flex items-center gap-2 w-full focus-within:outline-none focus-within:ring-0 focus-within:border-gray-400'>
                 <HiOutlineEnvelope className='text-base-content/40 text-base shrink-0' />
                 <input
-                  type='email'
+                  type='text'
+                  {...register('emailOrUsername')}
                   className='grow'
-                  placeholder='nama@email.com'
-                  defaultValue='ahmad@example.com'
+                  placeholder='Email/Username'
                 />
               </label>
+              <span>
+                {errors?.emailOrUsername && errors?.emailOrUsername?.message}
+              </span>
             </label>
 
             {/* Password */}
@@ -47,16 +81,12 @@ export default function LoginPage() {
                 <HiOutlineLockClosed className='text-base-content/40 text-base shrink-0' />
                 <input
                   type='password'
+                  {...register('password')}
                   className='grow focus:outline-none'
                   placeholder='••••••••'
-                  defaultValue='123456'
                 />
               </label>
-              <div className='label pt-1'>
-                <span className='label-text-alt text-base-content/40'>
-                  Forgot password?
-                </span>
-              </div>
+              <span>{errors?.password && errors?.password?.message}</span>
             </label>
 
             {/* Submit */}
@@ -71,7 +101,7 @@ export default function LoginPage() {
                 Register now!
               </span>
             </p>
-          </div>
+          </form>
         </div>
       </div>
     </div>

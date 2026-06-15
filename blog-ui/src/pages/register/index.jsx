@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registerValidationSchema } from './../../features/register/schemas/register-validation-schema';
 import axios from 'axios';
+import { axiosInstance } from '../../utils/axios-instance';
 export default function RegisterPage() {
   const {
     register,
@@ -15,7 +16,7 @@ export default function RegisterPage() {
 
   const onHandleRegister = async ({ email, username, password, fullName }) => {
     try {
-      await axios.post('http://localhost:8000/api/v1/auth/register', {
+      await axiosInstance.post('/auth/register', {
         email,
         username,
         password,
@@ -63,7 +64,7 @@ export default function RegisterPage() {
                   placeholder='John Doe '
                 />
               </label>
-              <span>{errors?.fullName && errors?.fullName?.message}</span>
+              <span className='text-xs text-red-400'>{errors?.fullName && errors?.fullName?.message}</span>
             </label>
 
             {/* Email */}
@@ -80,7 +81,7 @@ export default function RegisterPage() {
                   placeholder='johndoe@email.com'
                 />
               </label>
-              <span>{errors?.email && errors?.email?.message}</span>
+              <span className='text-xs text-red-400'>{errors?.email && errors?.email?.message}</span>
             </label>
 
             {/* Username */}
@@ -99,7 +100,7 @@ export default function RegisterPage() {
                   placeholder='johndoe'
                 />
               </label>
-              <span>{errors?.username && errors?.username?.message}</span>
+              <span className='text-xs text-red-400'>{errors?.username && errors?.username?.message}</span>
             </label>
 
             {/* Password */}
@@ -118,7 +119,7 @@ export default function RegisterPage() {
                   placeholder='••••••••'
                 />
               </label>
-              <span>{errors?.password && errors?.password?.message}</span>
+              <span className='text-xs text-red-400'>{errors?.password && errors?.password?.message}</span>
             </label>
 
             {/* Submit */}
