@@ -31,6 +31,13 @@ export const ArticlesService = {
       },
     };
   },
+  async getById(id: string){
+    return await prisma.article.findUnique({
+      where: {
+        id
+      }
+    })
+  },
   updateById() {},
   deleteById() {},
 };

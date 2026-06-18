@@ -27,6 +27,17 @@ export const ArticlesController = {
             meta
         })
     },
+    async getById(req: Request, res: Response){
+        const {id} = req.params; 
+
+        const articleData = await ArticlesService.getById(id as string)
+    
+        res.status(StatusCodes.OK).json({
+            success: true, 
+            message: `Article with id: ${id} retrived successfully`, 
+            data: articleData
+        })
+    },
     updateById(req: Request, res: Response){},
     deleteById(req: Request, res: Response){}
 }

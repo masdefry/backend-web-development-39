@@ -7,6 +7,7 @@ import LoginPage from './pages/sign-in/index.jsx';
 import CreatePostPage from './pages/articles/create/index.jsx';
 import RootLayout from './components/Layout.jsx';
 import RegisterPage from './pages/register/index.jsx';
+import ArticleDetailPage from './pages/articles/detail';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')).render(
         <Route path='register' element={<RegisterPage />} />
         <Route path='articles'>
           <Route path='create' element={<CreatePostPage />} />
+          <Route path='detail/:id' element={<ArticleDetailPage />} />
         </Route>
       </Route>
     </Routes>

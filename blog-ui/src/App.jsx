@@ -102,11 +102,9 @@ export default function App() {
         {/* Post Grid */}
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           {articleList.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              isOwner={post.userId === users?.id}
-            />
+            <Link key={post.id} to={`/articles/detail/${post.id}`}>
+              <PostCard post={post} isOwner={post.userId === users?.id} />
+            </Link>
           ))}
         </div>
         <div className='flex justify-end py-10'>
